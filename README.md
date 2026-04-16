@@ -73,6 +73,7 @@ pip install -r requirements.txt
 
 cp .env.example .env
 # 编辑 .env —— 至少填写 OPENAI_API_KEY
+# 没有 GPU？把 WHISPER_DEVICE 改为 cpu
 ```
 
 启动服务 / Start：
@@ -83,7 +84,11 @@ bash coach.sh start          # 后台运行，日志输出到 accent-coach.log
 python app.py                # 前台运行，实时输出
 ```
 
-打开浏览器访问 **https://localhost:8443**（接受自签名证书即可）。
+> **首次启动说明：** Whisper 模型（distil-large-v3 约 1.5 GB）会在首次使用时自动从 HuggingFace 下载，请耐心等待。国内用户可在 `.env` 中取消 `HF_ENDPOINT` 的注释以使用镜像加速。
+
+打开浏览器访问 **https://localhost:8443**。
+
+> 由于使用自签名证书，浏览器会显示安全警告——点击 **"高级"→"继续前往"**（Chrome）或 **"接受风险并继续"**（Firefox）即可。
 
 停止服务 / Stop：
 
@@ -100,7 +105,7 @@ bash coach.sh stop
 | `OPENAI_API_KEY` | *（必填 required）* | 任意 OpenAI 兼容服务的 API Key |
 | `OPENAI_BASE_URL` | `https://api.openai.com/v1` | LLM 接口地址，支持 OpenAI / DeepSeek / Ollama 等 |
 | `LLM_MODEL` | `gpt-4.1-mini` | 模型名称 |
-| `WHISPER_DEVICE` | `cuda` | `cuda` = GPU，`cpu` = 仅 CPU |
+| `WHISPER_DEVICE` | `cpu` | `cuda` = GPU，`cpu` = 仅 CPU |
 | `WHISPER_MODEL` | `distil-large-v3` | Whisper 模型大小 |
 | `WHISPER_UNLOAD_TIMEOUT` | `120` | 空闲多少秒后自动卸载模型（节省显存） |
 | `TTS_VOICE` | `en-US-AndrewMultilingualNeural` | edge-tts 语音名称 |
@@ -139,7 +144,13 @@ WHISPER_DEVICE=cuda
 
 需要 NVIDIA GPU + **cuBLAS** + **cuDNN**（CUDA 12）。
 
-如果通过 pip 安装了 CUDA 库（`nvidia-cublas-cu12`、`nvidia-cudnn-cu12`），需要设置 `LD_LIBRARY_PATH`，让 `faster-whisper` 能找到它们：
+先安装 CUDA 运行时库（如果系统未自带）：
+
+```bash
+pip install nvidia-cublas-cu12 nvidia-cudnn-cu12
+```
+
+然后设置 `LD_LIBRARY_PATH`，让 `faster-whisper` 能找到它们：
 
 ```bash
 # 查找 pip 安装的库路径
