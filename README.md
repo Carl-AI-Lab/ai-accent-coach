@@ -4,9 +4,13 @@
 
 # AI Accent Coach — AI 美式英语口语教练
 
-自部署的 AI 口语练习工具，支持实时对话、发音纠正、生词本和间隔重复复习。
+自部署的 AI 口语练习工具，By **卡尔AI工坊**
+
+支持实时对话、发音纠正、生词本和间隔重复复习
 
 A self-hosted AI speaking coach for American English learners — real conversation practice, pronunciation coaching, vocabulary notebook, and spaced-repetition review.
+
+![carl](carl.png)
 
 ---
 
